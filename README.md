@@ -10,6 +10,8 @@ JPEG格式：有损压缩，适合照片等大尺寸图片。
 GIF格式：支持动画，适合简单的动态图像。
 
 WebP格式：谷歌开发的一种新型图片格式，支持有损和无损压缩，适合网络传输。
+
+注意：文件名称不能有特殊字符，最好纯英文名字。
 ### zh.222.202.jar 文件就是安卓汉化包，IDE不是中文就很头疼，适用版本（2022.2.1）
 ### code 文件夹是保存示例代码的文件夹，实际考试要求需要新建工程使用Main.Activity.xml文件更改代码
 ### v2RayN 文件夹是proxy代理软件，IDE报错要下载东西需要用到（国内网络环境很几把头疼），里面的节点可能用不了，自求多福吧。
@@ -68,7 +70,135 @@ WebP格式：谷歌开发的一种新型图片格式，支持有损和无损压�
 
 </LinearLayout>
 ```
+### 表格布局
+
+使用表格布局实现的登陆界面，包含一个用户名输入框、一个密码输入框和一个登陆按钮。其中，用户名输入框和密码输入框都使用了权重属性，使它们在表格中占据相同的宽度。登陆按钮使用了布局重心属性，使它在表格中水平居中。在Java代码中，我们可以通过findViewById()方法获取到布局文件中的控件，并为登陆按钮设置点击事件。
 在这个示例中，我们使用了一个垂直方向的LinearLayout布局，并在其中添加了三个ImageView控件。每个ImageView控件的宽度都被设置为match_parent，这样它们就会占据整个父布局的宽度，从而实现了纵向排布的效果。您可以将@drawable/image1、@drawable/image2和@drawable/image3替换为您自己的图片资源。
+```xml
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TableRow>
+        <TextView
+            android:text="用户名："
+            android:textSize="16sp"
+            android:paddingRight="8dp" />
+        <EditText
+            android:id="@+id/username_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="text" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="密码："
+            android:textSize="16sp"
+            android:paddingRight="8dp" />
+        <EditText
+            android:id="@+id/password_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textPassword" />
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登陆"
+            android:layout_gravity="center_horizontal" />
+    </TableRow>
+
+</TableLayout>
+```
+### 5张图片滚动播放
+这是一个使用ViewPager控件实现的图片滚动播放界面，包含5张图片。在布局文件中，我们只需要添加一个ViewPager控件即可。在Java代码中，我们创建了一个ImagePagerAdapter类来为ViewPager控件提供数据。在instantiateItem()方法中，我们创建了一个ImageView控件，并为它设置了图片资源和缩放类型，然后将它添加到ViewPager控件中。在destroyItem()方法中，我们将ImageView控件从ViewPager控件中移除。最后，在onCreate()方法中，我们将ImagePagerAdapter类设置为ViewPager控件的适配器。
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
+```
+这段代码用到了以下安卓类：
+
+AppCompatActivity：一个支持应用程序向后兼容的Activity基类。
+
+ViewPager：一个支持滑动切换页面的控件。
+
+PagerAdapter：一个抽象类，用于为ViewPager控件提供数据。
+
+ImageView：一个用于显示图片的控件。
+
+ViewGroup：一个抽象类，用于管理子控件的布局。
+
+要在Java文件的开头添加以下import语句来导入这些类：
+```java
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import androidx.viewpager.widget.PagerAdapter;
+```
+
+```java
+public class MainActivity extends AppCompatActivity {
+
+    private ViewPager mViewPager;
+    private int[] mImageIds = {R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4, R.drawable.image5};
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mViewPager = findViewById(R.id.view_pager);
+        mViewPager.setAdapter(new ImagePagerAdapter());
+    }
+
+    private class ImagePagerAdapter extends PagerAdapter {
+
+        @Override
+        public int getCount() {
+            return mImageIds.length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView imageView = new ImageView(MainActivity.this);
+            imageView.setImageResource(mImageIds[position]);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            container.addView(imageView);
+            return imageView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((ImageView) object);
+        }
+    }
+}
+```
+
 ## Android studio常见问题
 ### 镜像更新
 使用国内的镜像来下载更新Android Studio。以下是一些常用的国内镜像：
