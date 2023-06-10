@@ -198,7 +198,159 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
+### Scroll View滚动视图
+水平滚动
 
+在这个例子中，我们使用了HorizontalScrollView来包含一个LinearLayout，LinearLayout中包含了多个ImageView控件，每个ImageView控件显示一张图片。当用户在屏幕上水平滑动时，HorizontalScrollView会自动滚动，从而实现水平滚动的效果。
+```xml
+<HorizontalScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image1"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image2"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image3"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image4"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image5"/>
+
+    </LinearLayout>
+</HorizontalScrollView>
+```
+垂直滚动
+
+在这个例子中，我们使用了ScrollView来包含一个LinearLayout，LinearLayout中包含了多个ImageView控件，每个ImageView控件显示一张图片。当用户在屏幕上垂直滑动时，ScrollView会自动滚动，从而实现垂直滚动图片的效果。注意，这里的图片资源需要在drawable文件夹中提前准备好。
+```xml
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image1"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image2"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image3"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image4"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image5"/>
+
+    </LinearLayout>
+</ScrollView>
+
+```
+### Grid View网格视图
+可以使用GridView来实现网格图片排列的安卓程序，并且需要编写一个适配器来将数据绑定到GridView上。以下是一个简单的例子：
+```xml
+<GridView
+    android:id="@+id/grid_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:numColumns="3"
+    android:verticalSpacing="10dp"
+    android:horizontalSpacing="10dp"
+    android:padding="10dp"/>
+```
+```java
+public class MainActivity extends AppCompatActivity {
+
+    private GridView mGridView;
+    private ImageAdapter mAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mGridView = findViewById(R.id.grid_view);
+        mAdapter = new ImageAdapter(this);
+        mGridView.setAdapter(mAdapter);
+    }
+
+    private class ImageAdapter extends BaseAdapter {
+
+        private Context mContext;
+        private int[] mImageIds = {R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4, R.drawable.image5};
+
+        public ImageAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public int getCount() {
+            return mImageIds.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView imageView;
+            if (convertView == null) {
+                imageView = new ImageView(mContext);
+                imageView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            } else {
+                imageView = (ImageView) convertView;
+            }
+
+            imageView.setImageResource(mImageIds[position]);
+            return imageView;
+        }
+    }
+}
+```
 ## Android studio常见问题
 ### 镜像更新
 使用国内的镜像来下载更新Android Studio。以下是一些常用的国内镜像：
