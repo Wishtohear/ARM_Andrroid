@@ -295,6 +295,15 @@ public class MainActivity extends AppCompatActivity {
     android:padding="10dp"/>
 ```
 ```java
+import android.content.Context;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private GridView mGridView;
