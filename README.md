@@ -159,7 +159,14 @@ import androidx.viewpager.widget.PagerAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
-    private int[] mImageIds = {R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4, R.drawable.image5};
+    private int[] mImageIds = 
+    {
+        R.drawable.image1, 
+        R.drawable.image2, 
+        R.drawable.image3, 
+        R.drawable.image4, 
+        R.drawable.image5
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -322,7 +329,13 @@ public class MainActivity extends AppCompatActivity {
     private class ImageAdapter extends BaseAdapter {
 
         private Context mContext;
-        private int[] mImageIds = {R.drawable.image1, R.drawable.image2, R.drawable.image3, R.drawable.image4, R.drawable.image5};
+        private int[] mImageIds = {
+            R.drawable.image1,
+            R.drawable.image2,
+            R.drawable.image3, 
+            R.drawable.image4, 
+            R.drawable.image5
+            };
 
         public ImageAdapter(Context context) {
             mContext = context;
@@ -360,6 +373,114 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
+### Gallery画廊视图
+我们需要创建一个名为CircularImageAdapter的Java类，继承自BaseAdapter。我们将使用Gallery控件并设置适配器的监听事件，以便在手指移到图片上方时放大突出显示该图片。
+
+首先，创建一个名为CircularImageAdapter的Java类：
+```java
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Gallery;
+import android.widget.ImageView;
+
+public class CircularImageAdapter extends BaseAdapter {
+    private Context mContext;
+    private int[] mImageIds;
+
+    public CircularImageAdapter(Context context, int[] imageIds) {
+        mContext = context;
+        mImageIds = imageIds;
+    }
+
+    @Override
+    public int getCount() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mImageIds[position % mImageIds.length];
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ImageView imageView;
+        if (convertView == null) {
+            imageView = new ImageView(mContext);
+            imageView.setLayoutParams(new Gallery.LayoutParams(200, 200));
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        } else {
+            imageView = (ImageView) convertView;
+        }
+
+        imageView.setImageResource(mImageIds[position % mImageIds.length]);
+        return imageView;
+    }
+}
+
+```
+接下来，在您的Activity中设置Gallery控件，并为其设置适配器和监听器：
+```java
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Gallery;
+
+public class GalleryActivity extends Activity {
+    private Gallery mGallery;
+    private int[] mImageIds = {R.drawable.image1, R.drawable.image2, R.drawable.image3};
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gallery);
+
+        mGallery = (Gallery) findViewById(R.id.gallery);
+        CircularImageAdapter adapter = new CircularImageAdapter(this, mImageIds);
+        mGallery.setAdapter(adapter);
+
+        mGallery.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ImageView imageView = (ImageView) view;
+                imageView.setLayoutParams(new Gallery.LayoutParams(300, 300));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        mGallery.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Handle item click event here
+            }
+        });
+    }
+}
+
+```
+在布局文件中，添加一个Gallery控件：
+```xml
+<Gallery
+        android:id="@+id/gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+```
+### TabHost视图
+
 ## Android studio常见问题
 ### 镜像更新
 使用国内的镜像来下载更新Android Studio。以下是一些常用的国内镜像：
