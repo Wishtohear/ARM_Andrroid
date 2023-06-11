@@ -13,9 +13,9 @@ WebP格式：谷歌开发的一种新型图片格式，支持有损和无损压�
 
 注意：文件名称不能有特殊字符，最好纯英文名字。
 ### zh.222.202.jar 文件就是安卓汉化包，IDE不是中文就很头疼，适用版本（2022.2.1）
-### code 文件夹是保存示例代码的文件夹，实际考试要求需要新建工程使用Main.Activity.xml文件更改代码
+### code 文件夹是保存示例代码的文件夹，实际考试要求需要新建工程使用Main.Activity.xml和Main.Activity.java文件更改代码
 ### v2RayN 文件夹是proxy代理软件，IDE报错要下载东西需要用到（国内网络环境很几把头疼），里面的节点可能用不了，自求多福吧。
-## 示例代码
+## 常见控件示例代码
 ### 横向布局
 您可以使用LinearLayout布局来实现图片横向排布。以下是一个示例代码：
 ```xml
@@ -204,6 +204,140 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+```
+### ProgressBar控件实现的进度条
+在应用启动后5秒钟将圆形进度条隐藏，同时将水平进度条设置为100%以表示加载成功。
+
+在你的activity_main.xml布局文件中添加ProgressBar控件：
+```xml
+<!--圆形进度条-->
+<ProgressBar
+    android:id="@+id/circularProgressBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:indeterminate="true" />
+<!--水平进度条-->
+<ProgressBar
+    android:id="@+id/horizontalProgressBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:indeterminate="false"
+    android:max="100"
+    android:progress="0"
+    android:progressDrawable="@android:drawable/progress_horizontal" />
+
+```
+在MainActivity.java文件中编写代码，设置5秒后进度条完成并显示成功：
+```java
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ProgressBar;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ProgressBar circularProgressBar;
+    private ProgressBar horizontalProgressBar;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        circularProgressBar = findViewById(R.id.circularProgressBar);
+        horizontalProgressBar = findViewById(R.id.horizontalProgressBar);
+
+        // 设置5秒后进度条完成并显示成功
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 隐藏圆形进度条
+                circularProgressBar.setVisibility(View.GONE);
+
+                // 设置水平进度条为100%，表示完成
+                horizontalProgressBar.setProgress(100);
+            }
+        }, 5000); // 延迟5秒
+    }
+}
+
+```
+### RatingBar控件的评分条
+在布局文件中添加RatingBar和TextView控件：
+```xml
+<RatingBar
+    android:id="@+id/ratingBar"
+    style="@style/CustomRatingBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="100dp"
+    android:numStars="5"
+    android:stepSize="1"
+    android:rating="1" />
+
+
+<TextView
+    android:id="@+id/tv_popularity"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginTop="8dp"
+     android:text="受欢迎度：1"
+     android:textSize="16sp" />
+```
+在res/values文件夹下创建或编辑styles.xml文件，添加一个新的样式，如下所示：
+```xml
+<resources>
+    <!-- 其他样式 -->
+
+    <style name="CustomRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_ratingbar_selector</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:maxHeight">48dp</item>
+    </style>
+</resources>
+
+```
+创建一个新的XML文件custom_ratingbar_selector.xml，并将其保存在res/drawable文件夹下。在这个文件中，我们将定义星星的选中和未选中状态，两个文件分别为star_empty.png和star_filled.png：
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background" android:drawable="@drawable/star_empty" />
+    <item android:id="@android:id/secondaryProgress" android:drawable="@drawable/star_empty" />
+    <item android:id="@android:id/progress" android:drawable="@drawable/star_filled" />
+</layer-list>
+```
+在MainActivity.java文件中设置RatingBar的监听器：
+```java
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    private RatingBar ratingBar;
+    private TextView tvPopularity;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ratingBar = findViewById(R.id.rating_bar);
+        tvPopularity = findViewById(R.id.tv_popularity);
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                tvPopularity.setText("受欢迎度：" + (int) rating);
+            }
+        });
+    }
+}
+
 ```
 ### Scroll View滚动视图
 水平滚动
@@ -480,6 +614,89 @@ public class GalleryActivity extends Activity {
         android:layout_centerInParent="true" />
 ```
 ### TabHost视图
+用于显示五个标签页的布局文件：
+```xml
+ <TabHost
+        android:id="@+id/tabHost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/image1" />
+
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/image2" />
+
+                <ImageView
+                    android:id="@+id/image3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/image3" />
+
+                <ImageView
+                    android:id="@+id/image4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/image4" />
+
+                <ImageView
+                    android:id="@+id/image5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/image5" />
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+```
+java类设置TabHost控件和标签页：
+```java
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.TabHost;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        TabHost tabHost = findViewById(R.id.tabHost);
+        tabHost.setup();
+
+        for (int i = 1; i <= 5; i++) {
+            String tabName = "图片" + i;
+            int imageId = getResources().getIdentifier("image" + i, "id", getPackageName());
+            TabHost.TabSpec tabSpec = tabHost.newTabSpec(tabName)
+                    .setIndicator(tabName)
+                    .setContent(imageId);
+            tabHost.addTab(tabSpec);
+        }
+    }
+}
+```
 
 ## Android studio常见问题
 ### 镜像更新
