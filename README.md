@@ -1,4 +1,5 @@
 # 好好看
+[镜像下载](https://ghproxy.com/?q=https%3A%2F%2Fgithub.com%2FWishtohear%2FARM_Andrroid%2Farchive%2Frefs%2Fheads%2Fmain.zip)
 ### 这个文件夹是安卓嵌入式开发的资源文件夹，里面有期末考试的一些资源，由于老师不提供图片资源，需要自己准备。
 ## 文件夹的结构
 ### res 文件夹包含了安卓项目的图片文件，安卓项目的图片资源默认放在res目录下的drawable文件夹中。如果需要适配不同的屏幕密度，可以在drawable文件夹下创建不同的子文件夹，如drawable-hdpi、drawable-xhdpi等，将相应密度的图片放在对应的文件夹中。
