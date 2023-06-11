@@ -14,6 +14,33 @@ WebP格式：谷歌开发的一种新型图片格式，支持有损和无损压�
 注意：文件名称不能有特殊字符，最好纯英文名字。
 ### zh.222.202.jar 文件就是安卓汉化包，IDE不是中文就很头疼，适用版本（2022.2.1）
 ### code 文件夹是保存示例代码的文件夹，实际考试要求需要新建工程使用Main.Activity.xml和Main.Activity.java文件更改代码
+这里面的代码能应该能直接用，没有的代码写在下面的自述文件中
+
+[横向布局](#横向布局)
+
+[纵向布局](#纵向布局)
+
+[EditText控件](#EditText控件)
+
+[CheekBox复选框控件](#CheekBox复选框控件)
+
+[ImageButton控件](#ImageButton控件)
+
+[表格布局](#表格布局)
+
+[5张图片滚动播放](#5张图片滚动播放)
+
+[ProgressBar控件实现的进度条](#ProgressBar控件实现的进度条)
+
+[RatingBar控件的评分条](#RatingBar控件的评分条)
+
+[ScrollView滚动视图](#ScrollView滚动视图)
+
+[GridView网格视图](#GridView网格视图)
+
+[Gallery画廊视图](#Gallery画廊视图)
+
+[TabHost视图](#TabHost视图)
 ### v2RayN 文件夹是proxy代理软件，IDE报错要下载东西需要用到（国内网络环境很几把头疼），里面的节点可能用不了，自求多福吧。
 ## 常见控件示例代码
 ### 横向布局
@@ -70,6 +97,219 @@ WebP格式：谷歌开发的一种新型图片格式，支持有损和无损压�
 
 </LinearLayout>
 ```
+### EditText控件
+在activity_main.xml布局文件中添加EditText，Button和TextView控件：
+```xml
+<EditText
+        android:id="@+id/et_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入信息" />
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="提交传回信息" />
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text=""
+        android:textSize="18sp" />
+
+```
+在MainActivity.java中为按钮添加点击事件监听器：
+```java
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText etInput;
+    private Button btnSubmit;
+    private TextView tvResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etInput = findViewById(R.id.et_input);
+        btnSubmit = findViewById(R.id.btn_submit);
+        tvResult = findViewById(R.id.tv_result);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputText = etInput.getText().toString();
+                tvResult.setText(inputText);
+            }
+        });
+    }
+}
+```
+现在，当用户在EditText控件中输入乙肝信息并点击提交按钮时，输入的文本将显示在按钮下方的TextView控件中。
+### CheekBox复选框控件
+在activity_main.xml文件中添加CheckBox控件以及一个按钮和一个TextView。布局代码如下：
+```xml
+<CheckBox
+        android:id="@+id/checkBox_plain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Plain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBox_serif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Serif"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_plain" />
+
+    <CheckBox
+        android:id="@+id/checkBox_bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_serif" />
+
+    <CheckBox
+        android:id="@+id/checkBox_italic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_bold" />
+
+    <Button
+        android:id="@+id/button_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkBox_italic" />
+
+    <TextView
+        android:id="@+id/textView_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_show" />
+```
+接下来，在MainActivity.java中编写按钮点击事件监听器，以获取CheckBox的值并更新TextView的内容。代码如下：
+```java
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    private CheckBox checkBox_plain, checkBox_serif, checkBox_bold, checkBox_italic;
+    private Button button_show;
+    private TextView textView_result;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        checkBox_plain = findViewById(R.id.checkBox_plain);
+        checkBox_serif = findViewById(R.id.checkBox_serif);
+        checkBox_bold = findViewById(R.id.checkBox_bold);
+        checkBox_italic = findViewById(R.id.checkBox_italic);
+        button_show = findViewById(R.id.button_show);
+        textView_result = findViewById(R.id.textView_result);
+
+        button_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String result = "";
+                if (checkBox_plain.isChecked()) {
+                    result += "Plain, ";
+                }
+                if (checkBox_serif.isChecked()) {
+                    result += "Serif, ";
+                }
+                if (checkBox_bold.isChecked()) {
+                    result += "Bold, ";
+                }
+                if (checkBox_italic.isChecked()) {
+                    result += "Italic";
+                }
+                textView_result.setText(result);
+            }
+        });
+    }
+}
+```
+现在，当用户选中plain、serif、bold和/or italic的CheckBox并点击按钮时，应用程序将在按钮下方的TextView中显示选中的选项。
+### ImageButton控件
+在res/drawable文件夹下，添加两个图片资源：play_button.png和pause_button.png。这两个图片分别表示播放和暂停按钮的状态。
+
+在activity_main.xml文件中添加ImageButton控件，并设置其背景为播放按钮图片：
+```xml
+<ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/play_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+```
+在MainActivity.java文件中编写代码以实现播放和暂停图片的切换逻辑：
+```java
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ImageButton imageButton;
+    private boolean isPlaying;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        imageButton = findViewById(R.id.imageButton);
+        isPlaying = false;
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPlaying) {
+                    imageButton.setBackgroundResource(R.drawable.play_button);
+                } else {
+                    imageButton.setBackgroundResource(R.drawable.pause_button);
+                }
+                isPlaying = !isPlaying;
+            }
+        });
+    }
+}
+```
+这个示例中，我们首先在onCreate方法中获取ImageButton控件的引用，并将isPlaying变量设置为false。然后，我们为ImageButton设置一个点击事件监听器。当用户点击ImageButton时，我们根据isPlaying变量的值切换播放和暂停图片，并更新isPlaying变量的值。
 ### 表格布局
 
 使用表格布局实现的登陆界面，包含一个用户名输入框、一个密码输入框和一个登陆按钮。其中，用户名输入框和密码输入框都使用了权重属性，使它们在表格中占据相同的宽度。登陆按钮使用了布局重心属性，使它在表格中水平居中。在Java代码中，我们可以通过findViewById()方法获取到布局文件中的控件，并为登陆按钮设置点击事件。
@@ -339,7 +579,7 @@ public class MainActivity extends AppCompatActivity {
 }
 
 ```
-### Scroll View滚动视图
+### ScrollView滚动视图
 水平滚动
 
 在这个例子中，我们使用了HorizontalScrollView来包含一个LinearLayout，LinearLayout中包含了多个ImageView控件，每个ImageView控件显示一张图片。当用户在屏幕上水平滑动时，HorizontalScrollView会自动滚动，从而实现水平滚动的效果。
@@ -423,7 +663,7 @@ public class MainActivity extends AppCompatActivity {
 </ScrollView>
 
 ```
-### Grid View网格视图
+### GridView网格视图
 可以使用GridView来实现网格图片排列的安卓程序，并且需要编写一个适配器来将数据绑定到GridView上。以下是一个简单的例子：
 ```xml
 <GridView
